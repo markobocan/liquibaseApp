@@ -1,10 +1,47 @@
-<databaseChangeLog xmlns='http://www.liquibase.org/xml/ns/dbchangelog'
-                   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-                   xsi:schemaLocation='http://www.liquibase.org/xml/ns/dbchangelog
-    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd'>
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <changeSet id="000" author="markob">
-        <sql>
-            CREATE TABLE patient (ime VARCHAR(30), prezime VARCHAR(50));
-        </sql>
+        <createTable tableName="actor">
+            <column name="first_name" type="VARCHAR(40)"/>
+            <column name="last_name" type="VARCHAR(40)"/>
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="actor_pkey"/>
+            </column>
+        </createTable>
+        <createTable tableName="director">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="director_pkey"/>
+            </column>
+            <column name="first_name" type="VARCHAR(40)"/>
+            <column name="last_name" type="VARCHAR(50)"/>
+        </createTable>
+        <createTable tableName="genre">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="genre_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(40)"/>
+        </createTable>
+        <createTable tableName="movie">
+            <column name="title" type="VARCHAR(30)"/>
+            <column name="description" type="VARCHAR(500)"/>
+            <column name="duration" type="VARCHAR(3)"/>
+            <column name="release_date" type="date"/>
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="movie_pkey"/>
+            </column>
+            <column name="director_id" type="INTEGER"/>
+            <column name="genre_id" type="INTEGER"/>
+        </createTable>
+        <createTable tableName="movie_actor">
+            <column autoIncrement="true" name="id" type="SERIAL">
+                <constraints primaryKey="true" primaryKeyName="movie_actor_pkey"/>
+            </column>
+            <column name="movie_id" type="INTEGER"/>
+            <column name="actor_id" type="INTEGER"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="actor_id" baseTableName="movie_actor" constraintName="movie_actor_actor_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="actor" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="movie_id" baseTableName="movie_actor" constraintName="movie_actor_movie_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="movie" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="director_id" baseTableName="movie" constraintName="movie_director_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="director" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="genre_id" baseTableName="movie" constraintName="movie_genre_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="genre" validate="true"/>
     </changeSet>
 </databaseChangeLog>
